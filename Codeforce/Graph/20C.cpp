@@ -21,8 +21,9 @@ int main() {
     vector<long long> dist(n + 1, LLONG_MAX);
     vector<int> parent(n + 1);
 
-    for (int i = 1; i <= n; i++)
+    for (int i = 1; i <= n; i++) {
         parent[i] = i;
+    }
 
     priority_queue<
         pair<long long, int>,
@@ -35,23 +36,26 @@ int main() {
 
     while (!pq.empty()) {
 
-        auto [dis, node] = pq.top();
+        pair<long long, int> curr = pq.top();
         pq.pop();
 
-        if (dis > dist[node])
+        long long currDist = curr.first;
+        int node = curr.second;
+
+        if (currDist > dist[node])
             continue;
 
         for (auto &it : adj[node]) {
 
-            int next = it.first;
-            int wt = it.second;
+            int nextNode = it.first;
+            int weight = it.second;
 
-            if (dis + wt < dist[next]) {
+            if (currDist + weight < dist[nextNode]) {
 
-                dist[next] = dis + wt;
-                parent[next] = node;
+                dist[nextNode] = currDist + weight;
+                parent[nextNode] = node;
 
-                pq.push({dist[next], next});
+                pq.push({dist[nextNode], nextNode});
             }
         }
     }
@@ -63,17 +67,20 @@ int main() {
 
     vector<int> path;
 
-    int node = n;
+    int currNode = n;
 
-    while (parent[node] != node) {
-        path.push_back(node);
-        node = parent[node];
+    while (parent[currNode] != currNode) {
+        path.push_back(currNode);
+        currNode = parent[currNode];
     }
 
     path.push_back(1);
 
     reverse(path.begin(), path.end());
 
-    for (int x : path)
+    for (int x : path) {
         cout << x << " ";
+    }
+
+    return 0;
 }
